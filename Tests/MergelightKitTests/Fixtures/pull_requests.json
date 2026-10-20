@@ -1,0 +1,439 @@
+{
+ "PR_ready": {
+  "id": "PR_ready",
+  "number": 101,
+  "title": "feat: ready to ship",
+  "url": "https://github.com/acme/api/pull/101",
+  "state": "OPEN",
+  "isDraft": false,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/101",
+  "headRefOid": "0000000000000000000000000000000000000101",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_1"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_1",
+   "name": "api",
+   "url": "https://github.com/acme/api",
+   "owner": {
+    "login": "acme"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": true,
+   "rebaseMergeAllowed": false,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": false,
+   "viewerDefaultMergeMethod": "SQUASH"
+  },
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "CLEAN",
+  "reviewDecision": "APPROVED",
+  "autoMergeRequest": null,
+  "latestOpinionatedReviews": {
+   "nodes": [
+    {
+     "state": "APPROVED",
+     "author": {
+      "login": "alice",
+      "avatarUrl": "https://avatars.githubusercontent.com/alice"
+     }
+    }
+   ]
+  },
+  "reviewRequests": {
+   "nodes": []
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": {
+       "state": "SUCCESS",
+       "contexts": {
+        "checkRunCountsByState": [
+         {
+          "state": "SUCCESS",
+          "count": 12
+         },
+         {
+          "state": "SKIPPED",
+          "count": 1
+         },
+         {
+          "state": "NEUTRAL",
+          "count": 1
+         }
+        ],
+        "statusContextCountsByState": [
+         {
+          "state": "SUCCESS",
+          "count": 1
+         }
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "PR_failing": {
+  "id": "PR_failing",
+  "number": 102,
+  "title": "fix: flaky ledger",
+  "url": "https://github.com/acme/api/pull/102",
+  "state": "OPEN",
+  "isDraft": false,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/102",
+  "headRefOid": "0000000000000000000000000000000000000102",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_1"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_1",
+   "name": "api",
+   "url": "https://github.com/acme/api",
+   "owner": {
+    "login": "acme"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": true,
+   "rebaseMergeAllowed": false,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": false,
+   "viewerDefaultMergeMethod": "SQUASH"
+  },
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "BLOCKED",
+  "reviewDecision": "CHANGES_REQUESTED",
+  "autoMergeRequest": null,
+  "latestOpinionatedReviews": {
+   "nodes": [
+    {
+     "state": "APPROVED",
+     "author": {
+      "login": "alice",
+      "avatarUrl": "https://avatars.githubusercontent.com/alice"
+     }
+    },
+    {
+     "state": "CHANGES_REQUESTED",
+     "author": {
+      "login": "bob",
+      "avatarUrl": "https://avatars.githubusercontent.com/bob"
+     }
+    }
+   ]
+  },
+  "reviewRequests": {
+   "nodes": [
+    {
+     "requestedReviewer": {
+      "__typename": "User",
+      "login": "carol",
+      "avatarUrl": "https://avatars.githubusercontent.com/carol"
+     }
+    },
+    {
+     "requestedReviewer": {
+      "__typename": "Team",
+      "slug": "platform",
+      "organization": {
+       "login": "acme"
+      }
+     }
+    },
+    {
+     "requestedReviewer": {
+      "__typename": "User",
+      "login": "alice",
+      "avatarUrl": "https://avatars.githubusercontent.com/alice"
+     }
+    }
+   ]
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": {
+       "state": "FAILURE",
+       "contexts": {
+        "checkRunCountsByState": [
+         {
+          "state": "SUCCESS",
+          "count": 10
+         },
+         {
+          "state": "FAILURE",
+          "count": 2
+         },
+         {
+          "state": "IN_PROGRESS",
+          "count": 1
+         }
+        ],
+        "statusContextCountsByState": [
+         {
+          "state": "PENDING",
+          "count": 1
+         }
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "PR_draft": {
+  "id": "PR_draft",
+  "number": 7,
+  "title": "wip: fork experiment",
+  "url": "https://github.com/octo/dotfiles/pull/7",
+  "state": "OPEN",
+  "isDraft": true,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/7",
+  "headRefOid": "0000000000000000000000000000000000000007",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_fork"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_2",
+   "name": "dotfiles",
+   "url": "https://github.com/octo/dotfiles",
+   "owner": {
+    "login": "octo"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": false,
+   "rebaseMergeAllowed": true,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": true,
+   "viewerDefaultMergeMethod": "REBASE"
+  },
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "DRAFT",
+  "reviewDecision": null,
+  "autoMergeRequest": null,
+  "latestOpinionatedReviews": {
+   "nodes": []
+  },
+  "reviewRequests": {
+   "nodes": []
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": null
+     }
+    }
+   ]
+  }
+ },
+ "PR_merged": {
+  "id": "PR_merged",
+  "number": 99,
+  "title": "already merged, stale index",
+  "url": "https://github.com/acme/api/pull/99",
+  "state": "MERGED",
+  "isDraft": false,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/99",
+  "headRefOid": "0000000000000000000000000000000000000099",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_1"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_1",
+   "name": "api",
+   "url": "https://github.com/acme/api",
+   "owner": {
+    "login": "acme"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": true,
+   "rebaseMergeAllowed": false,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": false,
+   "viewerDefaultMergeMethod": "SQUASH"
+  },
+  "mergeable": "UNKNOWN",
+  "mergeStateStatus": "UNKNOWN",
+  "reviewDecision": null,
+  "autoMergeRequest": null,
+  "latestOpinionatedReviews": {
+   "nodes": []
+  },
+  "reviewRequests": {
+   "nodes": []
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": null
+     }
+    }
+   ]
+  }
+ },
+ "PR_auto": {
+  "id": "PR_auto",
+  "number": 103,
+  "title": "chore: bump deps",
+  "url": "https://github.com/acme/api/pull/103",
+  "state": "OPEN",
+  "isDraft": false,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/103",
+  "headRefOid": "0000000000000000000000000000000000000103",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_1"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_1",
+   "name": "api",
+   "url": "https://github.com/acme/api",
+   "owner": {
+    "login": "acme"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": true,
+   "rebaseMergeAllowed": false,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": false,
+   "viewerDefaultMergeMethod": "SQUASH"
+  },
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "BLOCKED",
+  "reviewDecision": null,
+  "autoMergeRequest": {
+   "mergeMethod": "SQUASH",
+   "enabledAt": "2026-10-20T09:00:00Z"
+  },
+  "latestOpinionatedReviews": {
+   "nodes": []
+  },
+  "reviewRequests": {
+   "nodes": []
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": {
+       "state": "PENDING",
+       "contexts": {
+        "checkRunCountsByState": [
+         {
+          "state": "QUEUED",
+          "count": 3
+         },
+         {
+          "state": "SUCCESS",
+          "count": 2
+         }
+        ],
+        "statusContextCountsByState": []
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "PR_weird": {
+  "id": "PR_weird",
+  "number": 104,
+  "title": "future enums",
+  "url": "https://github.com/acme/api/pull/104",
+  "state": "OPEN",
+  "isDraft": false,
+  "createdAt": "2026-10-18T10:00:00Z",
+  "updatedAt": "2026-10-20T09:30:00Z",
+  "headRefName": "feature/104",
+  "headRefOid": "0000000000000000000000000000000000000104",
+  "baseRefName": "main",
+  "totalCommentsCount": 2,
+  "headRepository": {
+   "id": "R_1"
+  },
+  "author": {
+   "login": "octo",
+   "avatarUrl": "https://avatars.githubusercontent.com/u/1?s=48"
+  },
+  "repository": {
+   "id": "R_1",
+   "name": "api",
+   "url": "https://github.com/acme/api",
+   "owner": {
+    "login": "acme"
+   },
+   "mergeCommitAllowed": true,
+   "squashMergeAllowed": true,
+   "rebaseMergeAllowed": false,
+   "autoMergeAllowed": true,
+   "deleteBranchOnMerge": false,
+   "viewerDefaultMergeMethod": "SQUASH"
+  },
+  "mergeable": "MAYBE",
+  "mergeStateStatus": "SOMETHING_NEW",
+  "reviewDecision": "NEW_DECISION",
+  "autoMergeRequest": null,
+  "latestOpinionatedReviews": {
+   "nodes": []
+  },
+  "reviewRequests": {
+   "nodes": []
+  },
+  "commits": {
+   "nodes": [
+    {
+     "commit": {
+      "statusCheckRollup": null
+     }
+    }
+   ]
+  }
+ }
+}
