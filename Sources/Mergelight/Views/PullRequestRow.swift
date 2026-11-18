@@ -69,6 +69,7 @@ struct PullRequestRow: View {
   private var quickActions: some View {
     HStack(spacing: 0) {
       IconButton("doc.on.doc", help: "Copy branch name") { model.copyBranch(pr) }
+      IconButton("eye.slash", help: "Hide this pull request") { model.hide(pr) }
       IconButton(isExpanded ? "chevron.up" : "chevron.down", help: isExpanded ? "Hide details" : "Show checks and reviewers (⌥-click)") {
         model.toggleExpanded(pr)
       }
@@ -134,6 +135,7 @@ struct RowContextMenu: View {
     Button("Open on GitHub") { model.open(pr) }
     Button("Copy Link") { model.copyURL(pr) }
     Button("Copy Branch Name") { model.copyBranch(pr) }
+    Button("Hide Pull Request") { model.hide(pr) }
     Divider()
     if pr.canMergeNow {
       ForEach(pr.repository.allowedMergeMethods) { method in

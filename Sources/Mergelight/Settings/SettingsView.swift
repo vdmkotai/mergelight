@@ -74,6 +74,31 @@ private struct GeneralSettings: View {
       Section("Pull requests") {
         Toggle("Show drafts", isOn: $model.settings.showDrafts)
       }
+
+      Section {
+        if model.settings.hiddenPullRequests.isEmpty {
+          Text("None. Hover a pull request in the panel and click \(Image(systemName: "eye.slash")) to hide it.")
+            .foregroundStyle(.secondary)
+        } else {
+          ForEach(model.settings.hiddenPullRequests.reversed()) { pr in
+            HStack {
+              VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: "#\(pr.number) \(pr.title)").lineLimit(1)
+                Text(pr.repository).font(.caption).foregroundStyle(.secondary)
+              }
+              Spacer()
+              Button("Open") { model.open(pr.url) }
+              Button("Show") { model.unhide(pr.id) }
+            }
+          }
+        }
+      } header: {
+        Text("Hidden pull requests")
+      } footer: {
+        Text("Hidden pull requests don't show in the panel or count in the menu bar. Once one is merged or closed, it leaves this list.")
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      }
     }
     .formStyle(.grouped)
   }

@@ -52,9 +52,11 @@ final class AppModel {
 
   struct Banner: Equatable, Identifiable {
     enum Kind { case info, error }
+    enum Undo: Equatable { case unhide(String) }
     let id = UUID()
     let kind: Kind
     let text: String
+    var undo: Undo?
   }
 
   enum DeviceFlowState: Equatable {
@@ -405,6 +407,9 @@ final class AppModel {
 
     fetch = new
     if settings.sectionsOwner == nil { settings.sectionsOwner = new.viewerLogin }
+    // Merged or closed: nothing left to hide, and the Settings list stays short.
+    var pruned = settings
+    if pruned.forgetHiddenPullRequests(notIn: new) { settings = pruned }
     rebuild()
     // After a long gap (sleep, offline) the changes are old news; don't replay them.
     if let baseline = diffBaseline, let dashboard,
@@ -433,7 +438,7 @@ final class AppModel {
     }
     let new = Dashboard(
       fetch: fetch, configs: settings.sections, excluding: Set(locallyClosed.keys),
-      showDrafts: settings.showDrafts)
+      hidden: settings.hiddenPullRequestIDs, showDrafts: settings.showDrafts)
     if new != dashboard { dashboard = new }
   }
 
@@ -573,6 +578,28 @@ final class AppModel {
     expanded = expanded.filter { visible[$0] != nil }
     details = details.filter { visible[$0.key] != nil }
     for id in expanded { if let pr = visible[id] { loadDetail(pr) } }
+  }
+
+  // MARK: - Hiding
+
+  /// Takes a PR out of the panel and the menu bar count until it's unhidden or closed.
+  func hide(_ pr: PullRequest) {
+    guard !settings.hiddenPullRequestIDs.contains(pr.id) else { return }
+    settings.hiddenPullRequests.append(HiddenPullRequest(pr))
+    expanded.remove(pr.id)
+    // Leaving the list isn't news; don't let the next diff treat it as merged or closed.
+    diffBaseline = dashboard
+    show(.info, "Hid #\(pr.number)", undo: .unhide(pr.id))
+  }
+
+  func unhide(_ id: String) {
+    settings.hiddenPullRequests.removeAll { $0.id == id }
+    diffBaseline = dashboard
+  }
+
+  func unhideAll() {
+    settings.hiddenPullRequests = []
+    diffBaseline = dashboard
   }
 
   // MARK: - Actions
@@ -722,13 +749,21 @@ final class AppModel {
 
   // MARK: - Banner
 
-  func show(_ kind: Banner.Kind, _ text: String) {
-    banner = Banner(kind: kind, text: text)
+  func show(_ kind: Banner.Kind, _ text: String, undo: Banner.Undo? = nil) {
+    banner = Banner(kind: kind, text: text, undo: undo)
     bannerTask?.cancel()
     bannerTask = Task {
-      try? await Task.sleep(for: .seconds(kind == .error ? 8 : 3))
+      try? await Task.sleep(for: .seconds(kind == .error || undo != nil ? 8 : 3))
       guard !Task.isCancelled else { return }
       banner = nil
+    }
+  }
+
+  func undoBanner() {
+    guard let undo = banner?.undo else { return }
+    dismissBanner()
+    switch undo {
+    case .unhide(let id): unhide(id)
     }
   }
 

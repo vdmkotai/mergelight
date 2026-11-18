@@ -127,8 +127,28 @@ import Testing
     var settings = AppSettings(sections: DefaultSections.make(login: "octo", organizations: ["acme"]))
     settings.preferredMergeMethod = .rebase
     settings.collapsedSectionIDs = [settings.sections[0].id]
+    settings.hiddenPullRequests = [HiddenPullRequest(.make(id: "PR_9", number: 9), hiddenAt: .distantPast)]
     let decoded = try JSONDecoder().decode(AppSettings.self, from: JSONEncoder().encode(settings))
     #expect(decoded == settings)
+  }
+
+  @Test func forgetsHiddenPullRequestsThatAreNoLongerOpen() {
+    let section = SectionConfig(name: "x", color: .blue, query: "author:@me")
+    var settings = AppSettings(sections: [section])
+    settings.hiddenPullRequests = [
+      HiddenPullRequest(.make(id: "open")), HiddenPullRequest(.make(id: "merged")),
+      HiddenPullRequest(.make(id: "gone")),
+    ]
+    let fetch = DashboardFetch(
+      viewerLogin: "octo", fetchedAt: .now, rateLimit: nil,
+      results: [section.id: SectionResult(
+        query: section.effectiveQuery, pullRequests: [.make(id: "open"), .make(id: "merged", state: .merged)],
+        totalCount: 2)])
+    let forgot = settings.forgetHiddenPullRequests(notIn: fetch)
+    #expect(forgot)
+    #expect(settings.hiddenPullRequests.map(\.id) == ["open"])
+    let forgotAgain = settings.forgetHiddenPullRequests(notIn: fetch)
+    #expect(!forgotAgain, "nothing left to forget")
   }
 
   @Test func refetchOnlyWhenQueriesChange() {

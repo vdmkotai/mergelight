@@ -51,7 +51,9 @@ struct DashboardView: View {
     VStack(spacing: 0) {
       VStack(spacing: 0) {
         header
-        if let banner = model.banner { BannerView(banner: banner) { model.dismissBanner() } }
+        if let banner = model.banner {
+          BannerView(banner: banner, onUndo: { model.undoBanner() }, onDismiss: { model.dismissBanner() })
+        }
         Divider()
       }
       .onGeometryChange(for: CGFloat.self, of: \.size.height) { topHeight = $0 }
@@ -241,6 +243,7 @@ private struct EmptyStateView: View {
 
 private struct BannerView: View {
   let banner: AppModel.Banner
+  let onUndo: () -> Void
   let onDismiss: () -> Void
 
   var body: some View {
@@ -249,6 +252,9 @@ private struct BannerView: View {
         .foregroundStyle(banner.kind == .error ? .red : .green)
       Text(banner.text).lineLimit(3).fixedSize(horizontal: false, vertical: true)
       Spacer()
+      if banner.undo != nil {
+        Button("Undo", action: onUndo).buttonStyle(.link)
+      }
       IconButton("xmark", help: "Dismiss", action: onDismiss)
     }
     .font(.system(size: 12))
@@ -262,6 +268,33 @@ private struct BannerView: View {
   }
 }
 
+/// "2 hidden" in the footer; picking a PR brings it back.
+private struct HiddenMenu: View {
+  let model: AppModel
+
+  var body: some View {
+    let hidden = model.settings.hiddenPullRequests
+    Menu {
+      Section("Click to show again") {
+        ForEach(hidden.reversed()) { pr in
+          Button("#\(pr.number) \(pr.title) · \(pr.repository)") { model.unhide(pr.id) }
+        }
+      }
+      if hidden.count > 1 {
+        Divider()
+        Button("Show All") { model.unhideAll() }
+      }
+    } label: {
+      Label("\(hidden.count) hidden", systemImage: "eye.slash")
+    }
+    .menuStyle(.button)
+    .buttonStyle(.plain)
+    .menuIndicator(.hidden)
+    .fixedSize()
+    .help("Pull requests you hid. They don't count in the menu bar.")
+  }
+}
+
 private struct FooterView: View {
   let model: AppModel
   let onSettings: () -> Void
@@ -272,6 +305,9 @@ private struct FooterView: View {
         status(now: context.date)
       }
       Spacer()
+      if !model.settings.hiddenPullRequests.isEmpty {
+        HiddenMenu(model: model)
+      }
       if let rateLimit = model.dashboard?.rateLimit, rateLimit.remaining < rateLimit.limit / 4 {
         Text("API \(rateLimit.remaining)/\(rateLimit.limit)")
           .foregroundStyle(.orange)

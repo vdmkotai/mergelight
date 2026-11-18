@@ -49,6 +49,10 @@ public struct AppSettings: Codable, Equatable, Sendable {
   public var showDrafts: Bool
   public var notifications: NotificationSettings
   public var collapsedSectionIDs: Set<UUID>
+  /// PRs the user hid from the panel and the menu bar count, oldest first.
+  public var hiddenPullRequests: [HiddenPullRequest]
+
+  public var hiddenPullRequestIDs: Set<String> { Set(hiddenPullRequests.map(\.id)) }
 
   public static let refreshIntervalRange: ClosedRange<Double> = 15...600
 
@@ -63,6 +67,7 @@ public struct AppSettings: Codable, Equatable, Sendable {
     showDrafts = true
     notifications = NotificationSettings()
     collapsedSectionIDs = []
+    hiddenPullRequests = []
   }
 
   public init(from decoder: any Decoder) throws {
@@ -79,6 +84,19 @@ public struct AppSettings: Codable, Equatable, Sendable {
     showDrafts = c.value(.showDrafts, default: defaults.showDrafts)
     notifications = c.value(.notifications, default: defaults.notifications)
     collapsedSectionIDs = c.value(.collapsedSectionIDs, default: defaults.collapsedSectionIDs)
+    hiddenPullRequests = c.value(.hiddenPullRequests, default: defaults.hiddenPullRequests)
+  }
+
+  /// Forgets hidden PRs that are no longer open in any section: merged, closed, or gone from the
+  /// searches. Returns whether anything was dropped.
+  @discardableResult
+  public mutating func forgetHiddenPullRequests(notIn fetch: DashboardFetch) -> Bool {
+    guard !hiddenPullRequests.isEmpty else { return false }
+    let open = Set(fetch.results.values.flatMap(\.pullRequests).filter { $0.state == .open }.map(\.id))
+    let kept = hiddenPullRequests.filter { open.contains($0.id) }
+    guard kept.count != hiddenPullRequests.count else { return false }
+    hiddenPullRequests = kept
+    return true
   }
 
   /// Changes that require new data from GitHub, as opposed to re-filtering what we have.
@@ -97,6 +115,25 @@ public struct AppSettings: Codable, Equatable, Sendable {
         + ["drafts=\(s.showDrafts)"]
     }
     return key(self) != key(other)
+  }
+}
+
+/// A PR hidden by hand. Keeps enough to list it in Settings after it leaves the dashboard.
+public struct HiddenPullRequest: Codable, Hashable, Identifiable, Sendable {
+  public let id: String
+  public let number: Int
+  public let title: String
+  public let repository: String
+  public let url: URL
+  public let hiddenAt: Date
+
+  public init(_ pr: PullRequest, hiddenAt: Date = .now) {
+    id = pr.id
+    number = pr.number
+    title = pr.title
+    repository = pr.repository.nameWithOwner
+    url = pr.url
+    self.hiddenAt = hiddenAt
   }
 }
 

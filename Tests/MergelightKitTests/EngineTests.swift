@@ -24,6 +24,17 @@ import Testing
       "dedup is per tab: a PR can be mine and awaiting my review at once")
   }
 
+  @Test func hiddenPullRequestsLeaveEveryTabAndCount() {
+    let a = PullRequest.make(id: "a")
+    let b = PullRequest.make(id: "b")
+    let dashboard = Dashboard(
+      fetch: fetch([work: [a, b], review: [a]]), configs: [work, review], hidden: ["a"])
+    #expect(dashboard.pullRequests(in: .mine).map(\.id) == ["b"])
+    #expect(dashboard.pullRequests(in: .review).isEmpty)
+    #expect(dashboard.menuBar.total == 1)
+    #expect(dashboard.menuBar.reviewRequests == 0)
+  }
+
   @Test func disabledSectionHidesItsOwnerFromOtherSections() {
     let old = SectionConfig(name: "Old", color: .purple, query: "author:@me ORG:OldCo", isEnabled: false)
     let kept = PullRequest.make(id: "kept")

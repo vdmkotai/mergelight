@@ -104,12 +104,13 @@ public struct Dashboard: Sendable, Equatable {
   /// - Only open PRs survive. GitHub's search index lags a merge by up to a minute, but the node
   ///   fields it returns are live, so a PR merged in the browser drops out on the next refresh.
   /// - `excluding` hides PRs this app just merged or closed, before GitHub catches up.
+  /// - `hidden` are PRs the user hid by hand. They leave every tab and every count.
   /// - Within a tab, a PR shows only in the first section that matched it.
   /// - Turning off a section for an owner hides that owner everywhere, so searches without an
   ///   owner (review requests, say) don't bring it back. An enabled section naming it wins.
   public init(
     fetch: DashboardFetch, configs: [SectionConfig], excluding: Set<String> = [],
-    showDrafts: Bool = true
+    hidden: Set<String> = [], showDrafts: Bool = true
   ) {
     let enabledOwners = configs.filter(\.isEnabled).reduce(into: Set<String>()) { $0.formUnion($1.owners) }
     let hiddenOwners = configs.filter { !$0.isEnabled }
@@ -120,7 +121,9 @@ public struct Dashboard: Sendable, Equatable {
       let result = fetch.results[config.id].flatMap { $0.query == config.effectiveQuery ? $0 : nil }
       var pullRequests: [PullRequest] = []
       for pr in result?.pullRequests ?? [] {
-        guard pr.state == .open, !excluding.contains(pr.id), showDrafts || !pr.isDraft else {
+        guard pr.state == .open, !excluding.contains(pr.id), !hidden.contains(pr.id),
+          showDrafts || !pr.isDraft
+        else {
           continue
         }
         guard !hiddenOwners.contains(pr.repository.owner.lowercased()) else { continue }
