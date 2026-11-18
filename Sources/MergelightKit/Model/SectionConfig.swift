@@ -67,6 +67,16 @@ public struct SectionConfig: Codable, Hashable, Identifiable, Sendable {
       }
   }
 
+  /// Lowercased logins named by `org:` and `user:` qualifiers.
+  public var owners: Set<String> {
+    Set(
+      query.split(whereSeparator: \.isWhitespace).compactMap { term -> String? in
+        let parts = term.lowercased().split(separator: ":", maxSplits: 1)
+        guard parts.count == 2, parts[0] == "org" || parts[0] == "user" else { return nil }
+        return String(parts[1])
+      })
+  }
+
   /// The query actually sent to GitHub: user text plus the repo filter and sane defaults.
   public var effectiveQuery: String {
     var terms = query.split(whereSeparator: \.isWhitespace).map(String.init)

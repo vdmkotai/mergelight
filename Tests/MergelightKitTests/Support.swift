@@ -14,8 +14,8 @@ enum Fixture {
 extension PullRequest {
   /// Builds a PR with sensible defaults; tests override only what they assert on.
   static func make(
-    id: String = "PR_1", number: Int = 1, state: State = .open, isDraft: Bool = false,
-    headRefOid: String = "abc", review: ReviewSummary = .empty,
+    id: String = "PR_1", number: Int = 1, owner: String = "acme", state: State = .open,
+    isDraft: Bool = false, headRefOid: String = "abc", review: ReviewSummary = .empty,
     mergeable: MergeInfo.Mergeable = .mergeable, status: MergeInfo.Status = .clean,
     ci: CIStatus = .none, autoMerge: MergeInfo.AutoMerge? = nil, viewerCanMergeAsAdmin: Bool = false,
     allowed: [MergeMethod] = [.squash, .merge], viewerDefault: MergeMethod = .merge
@@ -27,7 +27,7 @@ extension PullRequest {
       author: Person(login: "octo", avatarURL: nil), headRefName: "feature/\(number)",
       headRefOid: headRefOid, baseRefName: "main", isCrossRepository: false,
       repository: Repository(
-        id: "R_1", owner: "acme", name: "api", url: URL(string: "https://github.com/acme/api")!,
+        id: "R_1", owner: owner, name: "api", url: URL(string: "https://github.com/acme/api")!,
         allowedMergeMethods: allowed, viewerDefaultMergeMethod: viewerDefault,
         autoMergeAllowed: true, deletesBranchOnMerge: false),
       ci: ci, review: review,

@@ -3,6 +3,7 @@
 #
 #   scripts/build-app.sh           universal release build, signed with your Developer ID if present
 #   scripts/build-app.sh --run     same, then (re)launches the app
+#   scripts/build-app.sh --install same, then replaces /Applications/Mergelight.app and launches it
 #
 # Environment:
 #   VERSION            marketing version (default 0.1.0)
@@ -87,4 +88,10 @@ echo "Built $PWD/dist/Mergelight.app ($VERSION, build $BUILD_NUMBER)"
 if [[ "${1:-}" == "--run" ]]; then
   pkill -x Mergelight 2>/dev/null && sleep 0.5 || true
   open dist/Mergelight.app
+elif [[ "${1:-}" == "--install" ]]; then
+  pkill -x Mergelight 2>/dev/null && sleep 0.5 || true
+  rm -rf /Applications/Mergelight.app
+  ditto dist/Mergelight.app /Applications/Mergelight.app
+  open /Applications/Mergelight.app
+  echo "Installed /Applications/Mergelight.app"
 fi

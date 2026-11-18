@@ -24,6 +24,28 @@ import Testing
       "dedup is per tab: a PR can be mine and awaiting my review at once")
   }
 
+  @Test func disabledSectionHidesItsOwnerFromOtherSections() {
+    let old = SectionConfig(name: "Old", color: .purple, query: "author:@me ORG:OldCo", isEnabled: false)
+    let kept = PullRequest.make(id: "kept")
+    let gone = PullRequest.make(id: "gone", owner: "oldco")
+    let dashboard = Dashboard(fetch: fetch([review: [kept, gone]]), configs: [old, work, review])
+    #expect(dashboard.pullRequests(in: .review).map(\.id) == ["kept"])
+  }
+
+  @Test func enabledSectionKeepsAnOwnerAnotherSectionDisabled() {
+    let off = SectionConfig(name: "Off", color: .purple, query: "org:acme author:@me", isEnabled: false)
+    let pr = PullRequest.make(id: "a")
+    let dashboard = Dashboard(fetch: fetch([review: [pr]]), configs: [off, work, review])
+    #expect(dashboard.pullRequests(in: .review).map(\.id) == ["a"])
+  }
+
+  @Test func disabledSectionWithoutOwnerHidesNothing() {
+    let off = SectionConfig(name: "Elsewhere", color: .gray, query: "author:@me", isEnabled: false)
+    let pr = PullRequest.make(id: "a", owner: "someone")
+    let dashboard = Dashboard(fetch: fetch([review: [pr]]), configs: [off, review])
+    #expect(dashboard.pullRequests(in: .review).map(\.id) == ["a"])
+  }
+
   @Test func dropsClosedExcludedAndOptionallyDrafts() {
     let prs = [
       PullRequest.make(id: "open"), .make(id: "merged", state: .merged), .make(id: "closed", state: .closed),

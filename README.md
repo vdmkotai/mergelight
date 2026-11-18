@@ -19,7 +19,7 @@ Your GitHub pull requests in the macOS menu bar, with CI, reviews and merge stat
 - **Click a row** to open the PR in your default browser. ⌥-click, or the chevron on hover, shows its checks and reviewers instead.
 - **Merge from the menu bar.** Hover a ready PR and click Merge, or pick squash / merge / rebase from the split button. Asks for confirmation by default; one-click mode is a setting. Merges send the head commit, so GitHub refuses if someone pushed in the meantime.
 - **Other actions.** Update branch, re-run failed GitHub Actions jobs, enable or disable auto-merge, mark ready for review, admin merge (always confirmed), open, and copy branch or link.
-- **Sections.** Each section is a GitHub search query with a name, color and position. Defaults: one per organization, Personal, Elsewhere (contributions to other people's repos) and Review requests. Per section you can include or exclude repositories, hide it when empty, and choose whether it counts in the menu bar.
+- **Sections.** Each section is a GitHub search query with a name, color and position. Defaults: one per organization, Personal, Elsewhere (contributions to other people's repos) and Review requests. Per section you can include or exclude repositories, hide it when empty, and choose whether it counts in the menu bar. Disabling a section with `org:` or `user:` in its query hides that owner's PRs everywhere, including Review requests, unless an enabled section names the same owner.
 - **An honest count.** A PR you merge from the app disappears immediately. A PR merged in the browser disappears on the next status refresh (10–30 s), even while GitHub's search index still lists it.
 - **Notifications** for CI failed or passed, approvals, requested changes, merge conflicts, auto-merges and new review requests. Clicking one opens the PR.
 - **Fast.** Native AppKit + SwiftUI, about 3 MB. The panel opens instantly from a cached snapshot and refreshes in the background.
@@ -31,10 +31,12 @@ Build from source (Xcode 26 or newer, macOS 14 or newer to run):
 ```sh
 git clone https://github.com/vdmkotai/mergelight.git
 cd mergelight
-scripts/build-app.sh --run      # builds dist/Mergelight.app and launches it
+scripts/build-app.sh --install  # builds the app, installs it to /Applications and launches it
 ```
 
-The script signs with your Developer ID if the keychain has one, otherwise ad-hoc. Move `dist/Mergelight.app` to `/Applications` and turn on **Launch at login** in Settings.
+The script signs with your Developer ID if the keychain has one, otherwise ad-hoc. Use `--run` instead to launch from `dist/` without installing. Turn on **Launch at login** in Settings.
+
+Mergelight lives in the menu bar and has no Dock icon. Opening it from Finder, Spotlight or Raycast shows the panel; a launch at login stays quiet.
 
 ## Sign in
 
